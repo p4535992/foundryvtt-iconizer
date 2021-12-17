@@ -1,86 +1,7 @@
-import utils from './utils.js';
+import { warn } from '../index';
+import utils from './utilt';
 
-export const VTTA_ICNONIZER_MODULE_NAME = 'vtta-iconizer';
-
-/**
- * Module initialisation, game settings registering
- */
-export function init() {
-  utils.log('Init');
-  let debug = false;
-  if (!CONFIG.debug.vtta) {
-    CONFIG.debug.vtta = { iconizer: debug };
-  } else {
-    CONFIG.debug.vtta.iconizer = debug;
-  }
-
-  game.settings.register(VTTA_ICNONIZER_MODULE_NAME, 'replacement-policy', {
-    name: VTTA_ICNONIZER_MODULE_NAME + '.replacement-policy.name',
-    hint: VTTA_ICNONIZER_MODULE_NAME + '.replacement-policy.hint',
-    scope: 'world',
-    config: true,
-    type: Number,
-    default: 0,
-    choices: [
-      VTTA_ICNONIZER_MODULE_NAME + '.replacement-policy.0',
-      VTTA_ICNONIZER_MODULE_NAME + '.replacement-policy.1',
-      VTTA_ICNONIZER_MODULE_NAME + '.replacement-policy.2',
-    ],
-  });
-
-  game.settings.register(VTTA_ICNONIZER_MODULE_NAME, 'icon-database-policy', {
-    name: VTTA_ICNONIZER_MODULE_NAME + '.icon-database-policy.name',
-    hint: VTTA_ICNONIZER_MODULE_NAME + '.icon-database-policy.hint',
-    scope: 'world',
-    config: true,
-    type: Number,
-    default: 0,
-    choices: [
-      VTTA_ICNONIZER_MODULE_NAME + '.icon-database-policy.0',
-      VTTA_ICNONIZER_MODULE_NAME + '.icon-database-policy.1',
-      VTTA_ICNONIZER_MODULE_NAME + '.icon-database-policy.2',
-    ],
-  });
-
-  game.settings.register(VTTA_ICNONIZER_MODULE_NAME, 'base-dictionary', {
-    name: VTTA_ICNONIZER_MODULE_NAME + '.base-dictionary.name',
-    hint: VTTA_ICNONIZER_MODULE_NAME + '.base-dictionary.hint',
-    scope: 'world',
-    config: true,
-    type: String,
-    choices: {
-      'foundry-icons.json': 'Foundry Icons',
-      'wow-icons.json': 'World of Warcraft icons (offline, local icons)',
-      'wowhead-icons.json': 'World of Warcraft icons (online, wowhead.com)',
-    },
-    default: 'foundry-icons.json',
-  });
-
-  // Relabeling "icon directory" to "icon prefix" setting
-  game.settings.register(VTTA_ICNONIZER_MODULE_NAME, 'icon-directory', {
-    name: VTTA_ICNONIZER_MODULE_NAME + '.icon-prefix.name',
-    hint: VTTA_ICNONIZER_MODULE_NAME + '.icon-prefix.hint',
-    scope: 'world',
-    config: true,
-    type: String,
-    default: 'iconizer',
-  });
-
-  // Submitting icons is a todo
-  // game.settings.register("vtta-iconizer", "share-missing-icons", {
-  //   name: "vtta-iconizer.share-missing-icons.name",
-  //   hint: "vtta-iconizer.share-missing-icons.hint",
-  //   scope: "world",
-  //   config: true,
-  //   type: Boolean,
-  //   default: false,
-  // });
-}
-
-/**
- * Loading the icon database and registering the item-hooks to adjust the icon image accordingly
- */
-export async function ready() {
+export const readyHooks = async () => {
   // check for failed registered settings
   let hasErrors = false;
 
@@ -285,4 +206,19 @@ export async function ready() {
       document.dispatchEvent(new CustomEvent('deliverIcon', { detail: response }));
     }
   });
-}
+};
+
+export const setupHooks = () => {
+  //
+};
+
+export const initHooks = () => {
+  warn('Init Hooks processing');
+  utils.log('Init');
+  const debug = false;
+  if (!CONFIG.debug.vtta) {
+    CONFIG.debug.vtta = { iconizer: debug };
+  } else {
+    CONFIG.debug.vtta.iconizer = debug;
+  }
+};

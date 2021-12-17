@@ -1,14 +1,14 @@
-const fs = require('fs');
-const path = require('path');
+// const fs = require('fs');
+// const path = require('path');
 
-let dbItems = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'worldofwarcraft-icons.json'), 'utf-8'));
+const dbItems = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'worldofwarcraft-icons.json'), 'utf-8'));
 
-let modItems = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'wow-icons.json'), 'utf-8'));
+const modItems = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'wow-icons.json'), 'utf-8'));
 
-let added = [];
-let missing = [];
+const added = [];
+const missing = [];
 
-let defineType = (type) => {
+const defineType = (type) => {
   switch (type) {
     case 'backpack':
     case 'class':

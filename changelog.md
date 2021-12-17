@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.2.0]
+
+## [2.1.19]
+
 ## [2.1.18]
 
 - Added github workflow
