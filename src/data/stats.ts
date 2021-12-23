@@ -3,7 +3,7 @@ import * as path from 'path';
 
 import { log } from '../index';
 
-const files = fs.readdirSync(__dirname+'/json', 'utf-8').filter((file) => file.indexOf('.json') !== -1);
+const files = fs.readdirSync(__dirname + '/json', 'utf-8').filter((file) => file.indexOf('.json') !== -1);
 
 let types = {};
 

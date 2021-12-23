@@ -104,4 +104,22 @@ export const registerSettings = function () {
   //   type: Boolean,
   //   default: false,
   // });
+
+  getGame().settings.register(VTTA_ICONIZER_MODULE_NAME, 'customDictionaryPath', {
+    name: 'Custom Icon Dictionary',
+    hint: 'If specified, this dictionary will be searched for item icons prior to searching default locations. Takes effect after the next page refresh. See ReadMe on GitHub for more information.',
+    scope: 'world',
+    config: true,
+    default: '',
+    type: String, // Generic file pickers in the settings are not yet supported, and the custom settings-extender.js by @Azzurite currently only supports image, video, audio, or directory.
+  });
+
+  getGame().settings.register(VTTA_ICONIZER_MODULE_NAME, 'forceUpdate', {
+    name: 'Force Update Icons',
+    hint: 'If enabled, icons will be updated even if an icon is already set for an Item.',
+    scope: 'world',
+    config: true,
+    default: false,
+    type: Boolean,
+  });
 };

@@ -2,9 +2,9 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { log } from '../index';
 
-const dbItems = JSON.parse(fs.readFileSync(path.resolve(__dirname+'/temp', 'worldofwarcraft-icons.json'), 'utf-8'));
+const dbItems = JSON.parse(fs.readFileSync(path.resolve(__dirname + '/temp', 'worldofwarcraft-icons.json'), 'utf-8'));
 
-const modItems = JSON.parse(fs.readFileSync(path.resolve(__dirname+'/temp', 'wow-icons.json'), 'utf-8'));
+const modItems = JSON.parse(fs.readFileSync(path.resolve(__dirname + '/temp', 'wow-icons.json'), 'utf-8'));
 
 let added: any[] = [];
 const missing: any[] = [];

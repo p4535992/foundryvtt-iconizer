@@ -5,10 +5,10 @@ import { VTTAIconizerItem } from '../module/iconizer-models';
 const packDirectory = path.resolve(__dirname, '../../../systems/dnd5e/packs');
 const packNames = ['items.db', 'spells.db', 'classfeatures.db', 'classes.db'];
 
-const items:any[] = [];
+const items: any[] = [];
 for (const packName of packNames) {
   const existingEntries = items.length;
-  const entries:any[] = fs
+  const entries: any[] = fs
     .readFileSync(path.resolve(packDirectory, packName), 'utf-8')
     .split('\n')
     .map((line) => (line.trim() !== '' ? JSON.parse(line) : undefined))
@@ -36,14 +36,11 @@ for (const packName of packNames) {
   //items = items.concat(items, entries);
 }
 
-fs.writeFileSync(path.resolve(__dirname+'/json', 'foundry-icons.json'), JSON.stringify(items));
+fs.writeFileSync(path.resolve(__dirname + '/json', 'foundry-icons.json'), JSON.stringify(items));
 
-let icons = JSON.parse(fs.readFileSync(path.resolve(__dirname+'/temp', 'wow-icons.json'), 'utf-8'));//require("./wow-icons.json");
-icons = icons.map(icon => ({
+let icons = JSON.parse(fs.readFileSync(path.resolve(__dirname + '/temp', 'wow-icons.json'), 'utf-8')); //require("./wow-icons.json");
+icons = icons.map((icon) => ({
   name: icon.name,
-  icon: icon.icon.toLowerCase().replace(/png$/, "jpg")
+  icon: icon.icon.toLowerCase().replace(/png$/, 'jpg'),
 }));
-fs.writeFileSync(
-  path.resolve(__dirname+'/temp', "wowhead-icons.json"),
-  JSON.stringify(icons)
-);
+fs.writeFileSync(path.resolve(__dirname + '/temp', 'wowhead-icons.json'), JSON.stringify(icons));
