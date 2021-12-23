@@ -36,14 +36,14 @@ for (const packName of packNames) {
   //items = items.concat(items, entries);
 }
 
-fs.writeFileSync(path.resolve(__dirname, 'foundry-icons.json'), JSON.stringify(items));
+fs.writeFileSync(path.resolve(__dirname+'/json', 'foundry-icons.json'), JSON.stringify(items));
 
-// let icons = require("./wow-icons.json");
-// icons = icons.map(icon => ({
-//   name: icon.name,
-//   icon: icon.icon.toLowerCase().replace(/png$/, "jpg")
-// }));
-// fs.writeFileSync(
-//   path.resolve(__dirname, "wowhead-icons.json"),
-//   JSON.stringify(icons)
-// );
+let icons = JSON.parse(fs.readFileSync(path.resolve(__dirname+'/temp', 'wow-icons.json'), 'utf-8'));//require("./wow-icons.json");
+icons = icons.map(icon => ({
+  name: icon.name,
+  icon: icon.icon.toLowerCase().replace(/png$/, "jpg")
+}));
+fs.writeFileSync(
+  path.resolve(__dirname+'/temp', "wowhead-icons.json"),
+  JSON.stringify(icons)
+);
