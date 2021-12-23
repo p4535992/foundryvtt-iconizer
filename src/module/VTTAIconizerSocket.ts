@@ -1,4 +1,4 @@
-import { getAPI, getGame, VTTA_ICONIZER_MODULE_NAME } from "./settings";
+import { getAPI, getGame, VTTA_ICONIZER_MODULE_NAME } from './settings';
 
 export let vttaIconizerSocket;
 

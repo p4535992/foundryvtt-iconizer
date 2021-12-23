@@ -35,7 +35,7 @@ export function getGame(): Game {
   return game;
 }
 
-export function getAPI():  {
+export function getAPI(): any {
   if (!getGame()[VTTAIconizer.API]) {
     throw new Error('API Is Not Initialized');
   }
@@ -44,51 +44,51 @@ export function getAPI():  {
 
 export const registerSettings = function () {
   getGame().settings.register(VTTA_ICONIZER_MODULE_NAME, 'replacement-policy', {
-    name: VTTA_ICONIZER_MODULE_NAME + '.replacement-policy.name',
-    hint: VTTA_ICONIZER_MODULE_NAME + '.replacement-policy.hint',
+    name: `${VTTA_ICONIZER_MODULE_NAME}.replacement-policy.name`,
+    hint: `${VTTA_ICONIZER_MODULE_NAME}.replacement-policy.hint`,
     scope: 'world',
     config: true,
     type: Number,
     default: 0,
     choices: {
-      0: VTTA_ICONIZER_MODULE_NAME + '.replacement-policy.0',
-      1: VTTA_ICONIZER_MODULE_NAME + '.replacement-policy.1',
-      2: VTTA_ICONIZER_MODULE_NAME + '.replacement-policy.2',
+      0: `${VTTA_ICONIZER_MODULE_NAME}.replacement-policy.0`,
+      1: `${VTTA_ICONIZER_MODULE_NAME}.replacement-policy.1`,
+      2: `${VTTA_ICONIZER_MODULE_NAME}.replacement-policy.2`,
     },
   });
 
   getGame().settings.register(VTTA_ICONIZER_MODULE_NAME, 'icon-database-policy', {
-    name: VTTA_ICONIZER_MODULE_NAME + '.icon-database-policy.name',
-    hint: VTTA_ICONIZER_MODULE_NAME + '.icon-database-policy.hint',
+    name: `${VTTA_ICONIZER_MODULE_NAME}.icon-database-policy.name`,
+    hint: `${VTTA_ICONIZER_MODULE_NAME}.icon-database-policy.hint`,
     scope: 'world',
     config: true,
     type: Number,
     default: 0,
     choices: {
-      0: VTTA_ICONIZER_MODULE_NAME + '.icon-database-policy.0',
-      1: VTTA_ICONIZER_MODULE_NAME + '.icon-database-policy.1',
-      2: VTTA_ICONIZER_MODULE_NAME + '.icon-database-policy.2',
+      0: `${VTTA_ICONIZER_MODULE_NAME}.icon-database-policy.0`,
+      1: `${VTTA_ICONIZER_MODULE_NAME}.icon-database-policy.1`,
+      2: `${VTTA_ICONIZER_MODULE_NAME}.icon-database-policy.2`,
     },
   });
 
   getGame().settings.register(VTTA_ICONIZER_MODULE_NAME, 'base-dictionary', {
-    name: VTTA_ICONIZER_MODULE_NAME + '.base-dictionary.name',
-    hint: VTTA_ICONIZER_MODULE_NAME + '.base-dictionary.hint',
+    name: `${VTTA_ICONIZER_MODULE_NAME}.base-dictionary.name`,
+    hint: `${VTTA_ICONIZER_MODULE_NAME}.base-dictionary.hint`,
     scope: 'world',
     config: true,
     type: String,
     choices: {
-      'foundry-icons.json': 'Foundry Icons',
-      'wow-icons.json': 'World of Warcraft icons (offline, local icons)',
-      'wowhead-icons.json': 'World of Warcraft icons (online, wowhead.com)',
+      'foundry-icons.json': `Foundry Icons`,
+      'wow-icons.json': `World of Warcraft icons (offline, local icons)`,
+      'wowhead-icons.json': `World of Warcraft icons (online, wowhead.com)`,
     },
     default: 'foundry-icons.json',
   });
 
   // Relabeling "icon directory" to "icon prefix" setting
   getGame().settings.register(VTTA_ICONIZER_MODULE_NAME, 'icon-directory', {
-    name: VTTA_ICONIZER_MODULE_NAME + '.icon-prefix.name',
-    hint: VTTA_ICONIZER_MODULE_NAME + '.icon-prefix.hint',
+    name: `${VTTA_ICONIZER_MODULE_NAME}.icon-prefix.name`,
+    hint: `${VTTA_ICONIZER_MODULE_NAME}.icon-prefix.hint`,
     scope: 'world',
     config: true,
     type: String,

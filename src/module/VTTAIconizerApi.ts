@@ -1,5 +1,3 @@
-
-
 export class VTTAIconizer {
   static API = 'vttaIconizer';
 

@@ -1,12 +1,13 @@
-// const fs = require('fs');
-// const path = require('path');
+import * as fs from 'fs';
+import * as path from 'path';
+import { log } from '../index';
 
 const dbItems = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'worldofwarcraft-icons.json'), 'utf-8'));
 
 const modItems = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'wow-icons.json'), 'utf-8'));
 
-const added = [];
-const missing = [];
+let added: any[] = [];
+const missing: any[] = [];
 
 const defineType = (type) => {
   switch (type) {
@@ -32,22 +33,23 @@ const defineType = (type) => {
     case 'wand':
       return 'consumable';
     default:
-      console.log('DEFAULT CASE FOR ' + type);
-      result.push('loot');
+      log('DEFAULT CASE FOR ' + type);
+      //result.push('loot');
+      return 'loot';
   }
 };
 
-for (let modItem of modItems) {
+for (const modItem of modItems) {
   if (modItem.type === undefined) {
-    console.log('Looking up ' + modItem.name);
-    let filtered = dbItems.filter((item) => item.name === modItem.name);
+    log('Looking up ' + modItem.name);
+    const filtered = dbItems.filter((item) => item.name === modItem.name);
 
-    console.log('Found ' + filtered.length + ' results in DB');
-    console.log(filtered);
+    log('Found ' + filtered.length + ' results in DB');
+    log(filtered);
     if (filtered.length > 0) {
-      if (filtered.length > 1) console.log('+++');
+      if (filtered.length > 1) log('+++');
 
-      let items = filtered.map((item) => {
+      const items = filtered.map((item) => {
         return {
           ...modItem,
           type: defineType(item.type),
@@ -55,18 +57,18 @@ for (let modItem of modItems) {
           icon: item.icon,
         };
       });
-      console.log('Created ' + items.length + ' new items');
-      console.log(items);
+      log('Created ' + items.length + ' new items');
+      log(items);
       added = added.concat(items);
     } else {
       missing.push(modItem);
     }
-    console.log(`${modItem.name} => ${filtered.map((item) => item.type).join(', ')}`);
+    log(`${modItem.name} => ${filtered.map((item) => item.type).join(', ')}`);
   } else {
-    console.log(`Item ${modItem.name} has type ${modItem.type}, let's check for subtype`);
+    log(`Item ${modItem.name} has type ${modItem.type}, let's check for subtype`);
     // try adding a subType
-    let dbItem = dbItems.find((i) => i.name === modItem.name);
-    console.log(dbItem);
+    const dbItem = dbItems.find((i) => i.name === modItem.name);
+    log(dbItem);
     if (dbItem) {
       modItem.subType = dbItem.subType;
     } else {
@@ -78,5 +80,5 @@ for (let modItem of modItems) {
 
 fs.writeFileSync(__dirname + '/result.json', JSON.stringify(added));
 
-console.log('Missing items: ');
-console.log(missing);
+log('Missing items: ');
+log(missing);

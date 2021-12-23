@@ -1,13 +1,14 @@
-const fs = require('fs');
-const path = require('path');
+import * as fs from 'fs';
+import * as path from 'path';
+import { VTTAIconizerItem } from '../module/iconizer-models';
 
 const packDirectory = path.resolve(__dirname, '../../../systems/dnd5e/packs');
 const packNames = ['items.db', 'spells.db', 'classfeatures.db', 'classes.db'];
 
-let items = [];
-for (let packName of packNames) {
-  let existingEntries = items.length;
-  var entries = fs
+const items:any[] = [];
+for (const packName of packNames) {
+  const existingEntries = items.length;
+  const entries:any[] = fs
     .readFileSync(path.resolve(packDirectory, packName), 'utf-8')
     .split('\n')
     .map((line) => (line.trim() !== '' ? JSON.parse(line) : undefined))
@@ -16,12 +17,12 @@ for (let packName of packNames) {
       name: json.name,
       type: json.type,
       icon: json.img[0] !== '/' ? `/${json.img}` : json.img,
-    }));
+    })) as any[];
 
-  for (let item of entries) {
+  for (const item of entries) {
     if (item.icon) {
-      let filtered = items.filter(
-        (i) => i.name === item.name && i.type === item.type,
+      const filtered = items.filter(
+        (i: any) => i.name === item.name && i.type === item.type,
         // Foundry does not know about subTypes
       );
       if (filtered.length === 0) {

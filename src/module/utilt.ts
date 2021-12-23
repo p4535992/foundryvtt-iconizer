@@ -1,7 +1,7 @@
-let utils = {
+export const utils = {
   findByProperty: (arr, property, searchString) => {
     function levenshtein(a, b) {
-      var tmp;
+      let tmp;
       if (a.length === 0) {
         return b.length;
       }
@@ -14,10 +14,8 @@ let utils = {
         b = tmp;
       }
 
-      var i,
-        j,
-        res,
-        alen = a.length,
+      let i, j, res;
+      const alen = a.length,
         blen = b.length,
         row = Array(alen);
       for (i = 0; i <= alen; i++) {
@@ -36,14 +34,14 @@ let utils = {
     }
 
     const maxDistance = 3;
-    let minDistance = 100;
+    const minDistance = 100;
     let nearestHit = undefined;
 
     if (!Array.isArray(arr)) return undefined;
     arr
-      .filter((entry) => entry.hasOwnProperty(property))
+      .filter((entry: any) => Object.prototype.hasOwnProperty.call(entry, property))
       .forEach((entry) => {
-        let distance = levenshtein(searchString, entry[property]);
+        const distance = levenshtein(searchString, entry[property]);
         if (distance <= maxDistance && distance < minDistance) {
           nearestHit = entry;
         }
@@ -61,7 +59,7 @@ let utils = {
   },
   loadJSON: (path) => {
     return new Promise((resolve, reject) => {
-      var http = new XMLHttpRequest();
+      const http = new XMLHttpRequest();
       //http.setRequestHeader('Content-Type', 'application/json');
       http.onreadystatechange = function () {
         console.log("++++++++++++++++++');Download started");
@@ -81,19 +79,19 @@ let utils = {
       http.send();
     });
   },
-  log: (obj) => {
-    const LOG_PREFIX = 'VTTA Iconizer';
-    if (CONFIG && CONFIG.debug && CONFIG.debug.vtta && CONFIG.debug.vtta.iconizer)
-      switch (typeof obj) {
-        case 'object':
-        case 'array':
-          console.log(`${LOG_PREFIX} | ${typeof obj}`);
-          console.log(obj);
-          break;
-        default:
-          console.log(`${LOG_PREFIX} | ${obj}`);
-      }
-  },
+  // log: (obj) => {
+  //   const LOG_PREFIX = 'VTTA Iconizer';
+  //   if (CONFIG && CONFIG.debug && CONFIG.debug.vtta && CONFIG.debug.vtta.iconizer)
+  //     switch (typeof obj) {
+  //       case 'object':
+  //       case 'array':
+  //         console.log(`${LOG_PREFIX} | ${typeof obj}`);
+  //         console.log(obj);
+  //         break;
+  //       default:
+  //         console.log(`${LOG_PREFIX} | ${obj}`);
+  //     }
+  // },
   // checks for a given file
   // serverFileExists: path => {
   //   return new Promise((resolve, reject) => {

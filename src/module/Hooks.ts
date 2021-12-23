@@ -1,41 +1,44 @@
-import { warn } from '../index';
+import { log, warn } from '../index';
 import utils from './utilt';
+import { getGame, VTTA_ICONIZER_MODULE_NAME } from './settings';
 
 export const readyHooks = async () => {
   // check for failed registered settings
   let hasErrors = false;
 
-  for (let s of game.settings.settings.values()) {
-    if (s.module !== VTTA_ICNONIZER_MODULE_NAME) continue;
+  for (const s of getGame().settings.settings.values()) {
+    if (s.module !== VTTA_ICONIZER_MODULE_NAME) {
+      continue;
+    }
     try {
-      game.settings.get(s.module, s.key);
+      getGame().settings.get(s.module, s.key);
     } catch (err) {
       hasErrors = true;
-      ui.notifications.info(`[${s.module}] Erroneous module settings found, resetting to default.`);
-      game.settings.set(s.module, s.key, s.default);
+      ui.notifications?.info(`${s.module} | Erroneous module settings found, resetting to default.`);
+      getGame().settings.set(s.module, s.key, s.default);
     }
   }
 
   if (hasErrors) {
-    ui.notifications.warn('Please review the module settings to re-adjust them to your desired configuration.');
+    ui.notifications?.warn('Please review the module settings to re-adjust them to your desired configuration.');
   }
 
-  let iconData = new Map();
-  let iconDatabasePolicy = game.settings.get(VTTA_ICNONIZER_MODULE_NAME, 'icon-database-policy');
+  const iconData = new Map();
+  const iconDatabasePolicy = getGame().settings.get(VTTA_ICONIZER_MODULE_NAME, 'icon-database-policy');
 
   // load the base dictionary
   if (iconDatabasePolicy === 0 || iconDatabasePolicy === 1) {
     const basePath = ROUTE_PREFIX ? `/${ROUTE_PREFIX}` : '';
-    const path = `${basePath}/modules/vtta-iconizer/data/${game.settings.get(
-      VTTA_ICNONIZER_MODULE_NAME,
+    const path = `${basePath}/modules/${VTTA_ICONIZER_MODULE_NAME}/data/${getGame().settings.get(
+      VTTA_ICONIZER_MODULE_NAME,
       'base-dictionary',
     )}`;
 
     const fileExists = await utils.serverFileExists(path);
     if (fileExists) {
-      let response = await fetch(path, { method: 'GET' });
+      const response = await fetch(path, { method: 'GET' });
 
-      let json = await response.json();
+      const json = await response.json();
       json.forEach((data) => {
         iconData.set(data.name.toLowerCase(), data.icon);
       });
@@ -44,14 +47,14 @@ export const readyHooks = async () => {
 
   // load the custom icon database (if there is any)
   if (iconDatabasePolicy === 1 || iconDatabasePolicy === 2) {
-    const prefix = game.settings.get(VTTA_ICNONIZER_MODULE_NAME, 'icon-directory');
+    const prefix = <string>getGame().settings.get(VTTA_ICONIZER_MODULE_NAME, 'icon-directory');
     console.log('Prefix is: ' + prefix);
     if (prefix.indexOf('http') === 0) {
       console.log('starting with http');
-      let path = `${game.settings.get(VTTA_ICNONIZER_MODULE_NAME, 'icon-directory')}/icons.json`;
+      const path = `${getGame().settings.get(VTTA_ICONIZER_MODULE_NAME, 'icon-directory')}/icons.json`;
       try {
-        let response = await fetch(path, { method: 'GET' });
-        let json = await response.json();
+        const response = await fetch(path, { method: 'GET' });
+        const json = await response.json();
         json.forEach((data) => {
           iconData.set(data.name.toLowerCase(), data.icon);
         });
@@ -60,11 +63,11 @@ export const readyHooks = async () => {
         console.log('Error loading custom dictionary from ' + path);
       }
     } else {
-      let path = `/${game.settings.get(VTTA_ICNONIZER_MODULE_NAME, 'icon-directory')}/icons.json`;
-      let fileExists = await utils.serverFileExists(path);
+      const path = `/${getGame().settings.get(VTTA_ICONIZER_MODULE_NAME, 'icon-directory')}/icons.json`;
+      const fileExists = await utils.serverFileExists(path);
       if (fileExists) {
-        let response = await fetch(path, { method: 'GET' });
-        let json = await response.json();
+        const response = await fetch(path, { method: 'GET' });
+        const json = await response.json();
         json.forEach((data) => {
           iconData.set(data.name.toLowerCase(), data.icon);
         });
@@ -75,16 +78,17 @@ export const readyHooks = async () => {
   /**
    * Replaces the icon if the name changed and if the game settings allow that
    */
-  let replaceIcon = (options) => {
-    utils.log(options);
+  const replaceIcon = (options: any) => {
+    log(options);
     // if there is no name change here, just continue
-    if (!options || !options.name) return options;
-
+    if (!options || !options.name) {
+      return options;
+    }
     const REPLACEMENT_POLICY_REPLACE_ALL = 0;
     const REPLACEMENT_POLICY_REPLACE_DEFAULT = 1;
     const REPLACEMENT_POLICY_REPLACE_NONE = 2;
 
-    let replacementPolicy = game.settings.get(VTTA_ICNONIZER_MODULE_NAME, 'replacement-policy');
+    const replacementPolicy = getGame().settings.get(VTTA_ICONIZER_MODULE_NAME, 'replacement-policy');
 
     // stop right here if we should not replace anything
     if (replacementPolicy === REPLACEMENT_POLICY_REPLACE_NONE) return;
@@ -111,11 +115,11 @@ export const readyHooks = async () => {
           options.img = newIcon;
         } else {
           // online references by wowhead-icons.json
-          let baseDictionary = game.settings.get(VTTA_ICNONIZER_MODULE_NAME, 'base-dictionary');
+          const baseDictionary = getGame().settings.get(VTTA_ICONIZER_MODULE_NAME, 'base-dictionary');
           if (baseDictionary === 'wowhead-icons.json') {
             options.img = 'https://wow.zamimg.com/images/wow/icons/large' + '/' + newIcon;
           } else {
-            options.img = game.settings.get(VTTA_ICNONIZER_MODULE_NAME, 'icon-directory') + '/' + newIcon;
+            options.img = getGame().settings.get(VTTA_ICONIZER_MODULE_NAME, 'icon-directory') + '/' + newIcon;
           }
         }
       } else {
@@ -123,10 +127,10 @@ export const readyHooks = async () => {
           //options.img = "icons/svg/mystery-man.svg";
         }
       }
-      utils.log('Post-processing');
-      utils.log(options);
+      log('Post-processing');
+      log(options);
     } else {
-      utils.log('Not replacing icon');
+      log('Not replacing icon');
     }
 
     return options;
@@ -146,7 +150,7 @@ export const readyHooks = async () => {
 
   Hooks.on('preUpdateItem', (entity, updateData, options, userId) => {
     //Hooks.on("preUpdateItem", (createData, options) => {
-    utils.log('preUpdateItem');
+    log('preUpdateItem');
     if (!updateData.img) {
       updateData.img = entity.img;
     }
@@ -176,9 +180,9 @@ export const readyHooks = async () => {
 
   Hooks.on('preUpdateOwnedItem', (entity, updateData, options, userId) => {
     //Hooks.on("preUpdateOwnedItem", (parent, createData, options) => {
-    utils.log('preUpdateOwnedItem');
+    log('preUpdateOwnedItem');
     if (!options.img) {
-      let item = entity.getEmbeddedEntity('OwnedItem', options._id);
+      const item = entity.getEmbeddedEntity('OwnedItem', options._id);
       if (item) {
         options.img = item.img;
       }
@@ -186,20 +190,20 @@ export const readyHooks = async () => {
     options = replaceIcon(options);
   });
 
-  document.addEventListener('queryIcon', (event) => {
+  document.addEventListener('queryIcon', (event: any) => {
     if (event.detail && event.detail.name) {
-      let response = replaceIcon({ name: event.detail.name });
+      const response = replaceIcon({ name: event.detail.name });
       document.dispatchEvent(new CustomEvent('deliverIcon', response));
-      utils.log('queryIcon');
-      utils.log(response);
+      log('queryIcon');
+      log(response);
     }
   });
 
-  document.addEventListener('queryIcons', (event) => {
+  document.addEventListener('queryIcons', (event: any) => {
     if (event.detail && event.detail.names && Array.isArray(event.detail.names)) {
-      let response = [];
-      for (let name of event.detail.names) {
-        let result = replaceIcon(name);
+      const response: any[] = [];
+      for (const name of event.detail.names) {
+        const result = replaceIcon(name);
         response.push(replaceIcon(name));
       }
 
@@ -214,11 +218,11 @@ export const setupHooks = () => {
 
 export const initHooks = () => {
   warn('Init Hooks processing');
-  utils.log('Init');
-  const debug = false;
-  if (!CONFIG.debug.vtta) {
-    CONFIG.debug.vtta = { iconizer: debug };
-  } else {
-    CONFIG.debug.vtta.iconizer = debug;
-  }
+  // log('Init');
+  // const debug = false;
+  // if (!CONFIG.debug.vtta) {
+  //   CONFIG.debug.vtta = { iconizer: debug };
+  // } else {
+  //   CONFIG.debug.vtta.iconizer = debug;
+  // }
 };
