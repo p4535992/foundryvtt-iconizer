@@ -1,24 +1,24 @@
-# VTTA Iconizer
+# Iconizer (ex VTTA Iconizer)
 
-![Latest Release Download Count](https://img.shields.io/github/downloads/p4535992/vtta-iconizer/latest/module.zip?color=2b82fc&label=DOWNLOADS&style=for-the-badge) 
+![Latest Release Download Count](https://img.shields.io/github/downloads/p4535992/foundryvtt-iconizer/latest/module.zip?color=2b82fc&label=DOWNLOADS&style=for-the-badge)
 
-[![Forge Installs](https://img.shields.io/badge/dynamic/json?label=Forge%20Installs&query=package.installs&suffix=%25&url=https%3A%2F%2Fforge-vtt.com%2Fapi%2Fbazaar%2Fpackage%2Fchat-portrait&colorB=006400&style=for-the-badge)](https://forge-vtt.com/bazaar#package=chat-portrait) 
+[![Forge Installs](https://img.shields.io/badge/dynamic/json?label=Forge%20Installs&query=package.installs&suffix=%25&url=https%3A%2F%2Fforge-vtt.com%2Fapi%2Fbazaar%2Fpackage%2Ficonizer&colorB=006400&style=for-the-badge)](https://forge-vtt.com/bazaar#package=iconizer)
 
-![Foundry Core Compatible Version](https://img.shields.io/badge/dynamic/json.svg?url=https%3A%2F%2Fraw.githubusercontent.com%2Fp4535992%2Fvtta-iconizer%2Fmaster%2Fsrc%2Fmodule.json&label=Foundry%20Version&query=$.compatibleCoreVersion&colorB=orange&style=for-the-badge)
+![Foundry Core Compatible Version](https://img.shields.io/badge/dynamic/json.svg?url=https%3A%2F%2Fraw.githubusercontent.com%2Fp4535992%2Ffoundryvtt-iconizer%2Fmaster%2Fsrc%2Fmodule.json&label=Foundry%20Version&query=$.compatibility.verified&colorB=orange&style=for-the-badge)
 
-![Latest Version](https://img.shields.io/badge/dynamic/json.svg?url=https%3A%2F%2Fraw.githubusercontent.com%2Fp4535992%2Fvtta-iconizer%2Fmaster%2Fsrc%2Fmodule.json&label=Latest%20Release&prefix=v&query=$.version&colorB=red&style=for-the-badge)
+![Latest Version](https://img.shields.io/badge/dynamic/json.svg?url=https%3A%2F%2Fraw.githubusercontent.com%2Fp4535992%2Ffoundryvtt-iconizer%2Fmaster%2Fsrc%2Fmodule.json&label=Latest%20Release&prefix=v&query=$.version&colorB=red&style=for-the-badge)
 
-[![Foundry Hub Endorsements](https://img.shields.io/endpoint?logoColor=white&url=https%3A%2F%2Fwww.foundryvtt-hub.com%2Fwp-json%2Fhubapi%2Fv1%2Fpackage%2Fchat-portrait%2Fshield%2Fendorsements&style=for-the-badge)](https://www.foundryvtt-hub.com/package/chat-portrait/)
+[![Foundry Hub Endorsements](https://img.shields.io/endpoint?logoColor=white&url=https%3A%2F%2Fwww.foundryvtt-hub.com%2Fwp-json%2Fhubapi%2Fv1%2Fpackage%2Ficonizer%2Fshield%2Fendorsements&style=for-the-badge)](https://www.foundryvtt-hub.com/package/iconizer/)
 
-![GitHub all releases](https://img.shields.io/github/downloads/p4535992/vtta-iconizer/total?style=for-the-badge)
+![GitHub all releases](https://img.shields.io/github/downloads/p4535992/foundryvtt-iconizer/total?style=for-the-badge)
 
-Iconizer watches the creation of items in your world, and tries to find a suitable icon from a pre-populated name/icon dictionary. All you need to do, is
+[![Translation status](https://weblate.foundryvtt-hub.com/widgets/iconizer/-/287x66-black.png)](https://weblate.foundryvtt-hub.com/engage/iconizer/)
 
-- downloading a suitable icon library, or use the icons that are coming with Foundry
-- creating a dictionary
-- create items and watch the magic happen
+### If you want to buy me a coffee [![alt-text](https://img.shields.io/badge/-Patreon-%23ff424d?style=for-the-badge)](https://www.patreon.com/p4535992)
 
-## NOTE: If you are a javascript developer and not a typescript developer, you can just use the javascript files under the dist folder
+Adds a toggle to GM's token control menu, that allows them to ignore the vision of tokens. This makes it possible to see the entire map while moving tokens with vision around.
+
+By default disables the vision limitation when dragging a token as a GM (Useful for not show the map to player when you move some token on the map).
 
 ## Installation
 
@@ -28,11 +28,11 @@ To install this module manually:
 1.  Inside the Foundry "Configuration and Setup" screen, click "Add-on Modules"
 2.  Click "Install Module"
 3.  In the "Manifest URL" field, paste the following url:
-`https://raw.githubusercontent.com/VTTAssets/vtta-iconizer/master/src/module.json`
+`https://raw.githubusercontent.com/p4535992/foundryvtt-iconizer/master/src/module.json`
 4.  Click 'Install' and wait for installation to complete
 5.  Don't forget to enable the module in game using the "Manage Module" button
 
-## Pre-requisites
+### Features
 
 **Disclaimer:** I strongly advise to use icons that you have actually licensed, and urge you not to redistribute any icons that you are not allowed to redistribute.
 
@@ -96,9 +96,10 @@ The lookup is based on a name referencing an icon. The matches are made case-ins
 
 Just add all the entries you want to change, save the file and reload your world. The entries in your user-defined file have priority and will overwrite everything in the base directory.
 
-## License
 
-This module is licensed using the MIT License, any adaptations must provide both credit and indication of changes made.
+## Known Issue\Limitation
+
+## Api
 
 # Build
 
@@ -145,19 +146,6 @@ npm run-script build:watch
 ```bash
 npm run-script clean
 ```
-### lint and lintfix
-
-`lint` launch the eslint process based on the configuration [here](./.eslintrc)
-
-```bash
-npm run-script lint
-```
-
-`lintfix` launch the eslint process with the fix argument
-
-```bash
-npm run-script lintfix
-```
 
 ### prettier-format
 
@@ -179,8 +167,14 @@ npm run-script package
 
 ## Issues
 
-Any issues, bugs, or feature requests are always welcome to be reported directly to the [Issue Tracker](https://github.com/VTTAssets/vtta-iconizer/issues ), or using the [Bug Reporter Module](https://foundryvtt.com/packages/bug-reporter/).
+Any issues, bugs, or feature requests are always welcome to be reported directly to the [Issue Tracker](https://github.com/p4535992/foundryvtt-iconizer/issues ), or using the [Bug Reporter Module](https://foundryvtt.com/packages/bug-reporter/).
+
 
 ## License
 
 This package is under an [MIT license](LICENSE) and the [Foundry Virtual Tabletop Limited License Agreement for module development](https://foundryvtt.com/article/license/).
+
+
+## Acknowledgements
+
+Bootstrapped with League of Extraordinary FoundryVTT Developers  [foundry-vtt-types](https://github.com/League-of-Foundry-Developers/foundry-vtt-types).
