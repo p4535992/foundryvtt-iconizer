@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 
-import { log } from "../index";
+import { log } from "../scripts/lib/lib";
 
 const files = fs.readdirSync(__dirname + "/json", "utf-8").filter((file) => file.indexOf(".json") !== -1);
 

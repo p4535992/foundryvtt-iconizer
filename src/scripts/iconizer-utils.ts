@@ -1,6 +1,6 @@
-import { log } from "../index";
+import { log } from "./lib/lib";
 import { iconDict } from "./iconizer-dictionary";
-import { getGame, VTTA_ICONIZER_MODULE_NAME } from "./settings";
+import CONSTANTS from "./constants";
 
 export const utils = {
 	iconData: new Map(),
@@ -96,7 +96,7 @@ export const utils = {
 		const REPLACEMENT_POLICY_REPLACE_DEFAULT = 1;
 		const REPLACEMENT_POLICY_REPLACE_NONE = 2;
 
-		const replacementPolicy = getGame().settings.get(VTTA_ICONIZER_MODULE_NAME, "replacement-policy");
+		const replacementPolicy = game.settings.get(CONSTANTS.MODULE_NAME, "replacement-policy");
 
 		// stop right here if we should not replace anything
 		if (replacementPolicy === REPLACEMENT_POLICY_REPLACE_NONE) return;
@@ -123,12 +123,11 @@ export const utils = {
 					options.img = newIcon;
 				} else {
 					// online references by wowhead-icons.json
-					const baseDictionary = getGame().settings.get(VTTA_ICONIZER_MODULE_NAME, "base-dictionary");
+					const baseDictionary = game.settings.get(CONSTANTS.MODULE_NAME, "base-dictionary");
 					if (baseDictionary === "wowhead-icons.json") {
 						options.img = "https://wow.zamimg.com/images/wow/icons/large" + "/" + newIcon;
 					} else {
-						options.img =
-							getGame().settings.get(VTTA_ICONIZER_MODULE_NAME, "icon-directory") + "/" + newIcon;
+						options.img = game.settings.get(CONSTANTS.MODULE_NAME, "icon-directory") + "/" + newIcon;
 					}
 				}
 			} else {
@@ -175,8 +174,8 @@ export const utils = {
 	// }
 	updateAllActors() {
 		log("Update All Actors triggered.");
-		for (let actorCount = 0; actorCount < <number>getGame().actors?.contents.length; actorCount++) {
-			const actor = getGame().actors?.get(<string>(<Actor>getGame().actors?.contents[actorCount]).id);
+		for (let actorCount = 0; actorCount < <number>game.actors?.contents.length; actorCount++) {
+			const actor = game.actors?.get(<string>(<Actor>game.actors?.contents[actorCount]).id);
 			this.udateActor(actor);
 		}
 		log("Completed updating all actors.");
@@ -219,7 +218,7 @@ export const utils = {
 
 		const imageName = this.getImageName(item);
 
-		const forceUpdate = getGame().settings.get(VTTA_ICONIZER_MODULE_NAME, "forceUpdate");
+		const forceUpdate = game.settings.get(CONSTANTS.MODULE_NAME, "forceUpdate");
 
 		if (imageName == null || imageName == "mystery-man.svg" || forceUpdate) {
 			const itemName = this.getCleanedItemName(item);
@@ -271,8 +270,8 @@ export const utils = {
 
 	executeUpdates(actor, updates) {
 		if (updates.length > 0) {
-			if (actor.can(getGame().user, "update")) {
-				actor.updateEmbeddedEntity("OwnedItem", updates);
+			if (actor.can(game.user, "update")) {
+				actor.updateEmbeddedEntity("Item", updates);
 				log("Updated " + updates.length + " item icons for " + actor.name + ".");
 			} else {
 				log(
@@ -288,7 +287,7 @@ export const utils = {
 		log("Building dictionary.");
 
 		// Load Custom Dictionary
-		const customDictPath = getGame().settings.get(VTTA_ICONIZER_MODULE_NAME, "customDictionaryPath");
+		const customDictPath = game.settings.get(CONSTANTS.MODULE_NAME, "customDictionaryPath");
 
 		if (customDictPath) {
 			log("Loading custom dictionary: " + customDictPath);
@@ -298,7 +297,7 @@ export const utils = {
 				for (const key in customDict) {
 					this.combinedDict[key.replace(/(\\'|\\‘|\\’)/gm, "").toLowerCase()] = customDict[key];
 				}
-			} catch (err) {
+			} catch (err: any) {
 				log("Error loading custom dictionary. Defaults will be used. " + err.message);
 			}
 		}
@@ -310,15 +309,15 @@ export const utils = {
 
 		// Search all custom game items the user has access to.
 		// TODO: This filter does not seem to work - players can update icons using item names they do not have access to.
-		const gameItems: Item[] = <Item[]>getGame().items?.filter((i: any) => {
-			return getGame().user?.isGM && i.type;
-			//return (getGame().user?.isGM || !i.private) && i.type;
+		const gameItems: Item[] = <Item[]>game.items?.filter((i: any) => {
+			return game.user?.isGM && i.type;
+			//return (game.user?.isGM || !i.private) && i.type;
 		});
 		gameItems.forEach((item) => this.addItemToDictionary(item));
 
 		// Search all Item compendiums the user has access to.
 		// TODO: This filter does not seem to work - players can update icons using compendiums they do not have access to.
-		const packs = getGame().packs.filter((p) => (getGame().user?.isGM || !p.private) && p.entity === "Item");
+		const packs = game.packs.filter((p) => (game.user?.isGM || !p.private) && p.documentName === "Item");
 		for (const pack of packs) {
 			//log("Adding " + pack.metadata.label + " to dictionary.");
 			const packContent = await pack.getDocuments();

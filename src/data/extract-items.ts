@@ -1,6 +1,5 @@
 import * as fs from "fs";
 import * as path from "path";
-import { VTTAIconizerItem } from "../module/iconizer-models";
 
 const packDirectory = path.resolve(__dirname, "../../../systems/dnd5e/packs");
 const packNames = ["items.db", "spells.db", "classfeatures.db", "classes.db"];

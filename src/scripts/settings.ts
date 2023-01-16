@@ -1,83 +1,41 @@
-import { i18n } from "../index";
-import { VTTAIconizer } from "./VTTAIconizerApi";
-
-export const VTTA_ICONIZER_MODULE_NAME = "vtta-iconizer";
-
-/**
- * Because typescript doesn't know when in the lifecycle of foundry your code runs, we have to assume that the
- * canvas is potentially not yet initialized, so it's typed as declare let canvas: Canvas | {ready: false}.
- * That's why you get errors when you try to access properties on canvas other than ready.
- * In order to get around that, you need to type guard canvas.
- * Also be aware that this will become even more important in 0.8.x because no canvas mode is being introduced there.
- * So you will need to deal with the fact that there might not be an initialized canvas at any point in time.
- * @returns
- */
-export function getCanvas(): Canvas {
-	if (!(canvas instanceof Canvas) || !canvas.ready) {
-		throw new Error("Canvas Is Not Initialized");
-	}
-	return canvas;
-}
-
-/**
- * Because typescript doesn't know when in the lifecycle of foundry your code runs, we have to assume that the
- * canvas is potentially not yet initialized, so it's typed as declare let canvas: Canvas | {ready: false}.
- * That's why you get errors when you try to access properties on canvas other than ready.
- * In order to get around that, you need to type guard canvas.
- * Also be aware that this will become even more important in 0.8.x because no canvas mode is being introduced there.
- * So you will need to deal with the fact that there might not be an initialized canvas at any point in time.
- * @returns
- */
-export function getGame(): Game {
-	if (!(game instanceof Game)) {
-		throw new Error("Game Is Not Initialized");
-	}
-	return game;
-}
-
-export function getAPI(): any {
-	if (!getGame()[VTTAIconizer.API]) {
-		throw new Error("API Is Not Initialized");
-	}
-	return getGame()[VTTAIconizer.API];
-}
+import CONSTANTS from "./constants";
 
 export const registerSettings = function () {
-	getGame().settings.register(VTTA_ICONIZER_MODULE_NAME, "replacement-policy", {
-		name: `${VTTA_ICONIZER_MODULE_NAME}.replacement-policy.name`,
-		hint: `${VTTA_ICONIZER_MODULE_NAME}.replacement-policy.hint`,
+	game.settings.register(CONSTANTS.MODULE_NAME, "replacement-policy", {
+		name: `${CONSTANTS.MODULE_NAME}.replacement-policy.name`,
+		hint: `${CONSTANTS.MODULE_NAME}.replacement-policy.hint`,
 		scope: "world",
 		config: true,
 		type: Number,
 		default: 0,
-		choices: {
-			0: `${VTTA_ICONIZER_MODULE_NAME}.replacement-policy.0`,
-			1: `${VTTA_ICONIZER_MODULE_NAME}.replacement-policy.1`,
-			2: `${VTTA_ICONIZER_MODULE_NAME}.replacement-policy.2`,
+		choices: <any>{
+			0: `${CONSTANTS.MODULE_NAME}.replacement-policy.0`,
+			1: `${CONSTANTS.MODULE_NAME}.replacement-policy.1`,
+			2: `${CONSTANTS.MODULE_NAME}.replacement-policy.2`,
 		},
 	});
 
-	getGame().settings.register(VTTA_ICONIZER_MODULE_NAME, "icon-database-policy", {
-		name: `${VTTA_ICONIZER_MODULE_NAME}.icon-database-policy.name`,
-		hint: `${VTTA_ICONIZER_MODULE_NAME}.icon-database-policy.hint`,
+	game.settings.register(CONSTANTS.MODULE_NAME, "icon-database-policy", {
+		name: `${CONSTANTS.MODULE_NAME}.icon-database-policy.name`,
+		hint: `${CONSTANTS.MODULE_NAME}.icon-database-policy.hint`,
 		scope: "world",
 		config: true,
 		type: Number,
 		default: 0,
-		choices: {
-			0: `${VTTA_ICONIZER_MODULE_NAME}.icon-database-policy.0`,
-			1: `${VTTA_ICONIZER_MODULE_NAME}.icon-database-policy.1`,
-			2: `${VTTA_ICONIZER_MODULE_NAME}.icon-database-policy.2`,
+		choices: <any>{
+			0: `${CONSTANTS.MODULE_NAME}.icon-database-policy.0`,
+			1: `${CONSTANTS.MODULE_NAME}.icon-database-policy.1`,
+			2: `${CONSTANTS.MODULE_NAME}.icon-database-policy.2`,
 		},
 	});
 
-	getGame().settings.register(VTTA_ICONIZER_MODULE_NAME, "base-dictionary", {
-		name: `${VTTA_ICONIZER_MODULE_NAME}.base-dictionary.name`,
-		hint: `${VTTA_ICONIZER_MODULE_NAME}.base-dictionary.hint`,
+	game.settings.register(CONSTANTS.MODULE_NAME, "base-dictionary", {
+		name: `${CONSTANTS.MODULE_NAME}.base-dictionary.name`,
+		hint: `${CONSTANTS.MODULE_NAME}.base-dictionary.hint`,
 		scope: "world",
 		config: true,
 		type: String,
-		choices: {
+		choices: <any>{
 			"foundry-icons.json": `Foundry Icons`,
 			"wow-icons.json": `World of Warcraft icons (offline, local icons)`,
 			"wowhead-icons.json": `World of Warcraft icons (online, wowhead.com)`,
@@ -86,9 +44,9 @@ export const registerSettings = function () {
 	});
 
 	// Relabeling "icon directory" to "icon prefix" setting
-	getGame().settings.register(VTTA_ICONIZER_MODULE_NAME, "icon-directory", {
-		name: `${VTTA_ICONIZER_MODULE_NAME}.icon-prefix.name`,
-		hint: `${VTTA_ICONIZER_MODULE_NAME}.icon-prefix.hint`,
+	game.settings.register(CONSTANTS.MODULE_NAME, "icon-directory", {
+		name: `${CONSTANTS.MODULE_NAME}.icon-prefix.name`,
+		hint: `${CONSTANTS.MODULE_NAME}.icon-prefix.hint`,
 		scope: "world",
 		config: true,
 		type: String,
@@ -96,7 +54,7 @@ export const registerSettings = function () {
 	});
 
 	// Submitting icons is a todo
-	// getGame().settings.register("vtta-iconizer", "share-missing-icons", {
+	// game.settings.register("vtta-iconizer", "share-missing-icons", {
 	//   name: "vtta-iconizer.share-missing-icons.name",
 	//   hint: "vtta-iconizer.share-missing-icons.hint",
 	//   scope: "world",
@@ -105,7 +63,7 @@ export const registerSettings = function () {
 	//   default: false,
 	// });
 
-	getGame().settings.register(VTTA_ICONIZER_MODULE_NAME, "customDictionaryPath", {
+	game.settings.register(CONSTANTS.MODULE_NAME, "customDictionaryPath", {
 		name: "Custom Icon Dictionary",
 		hint: "If specified, this dictionary will be searched for item icons prior to searching default locations. Takes effect after the next page refresh. See ReadMe on GitHub for more information.",
 		scope: "world",
@@ -114,7 +72,7 @@ export const registerSettings = function () {
 		type: String, // Generic file pickers in the settings are not yet supported, and the custom settings-extender.js by @Azzurite currently only supports image, video, audio, or directory.
 	});
 
-	getGame().settings.register(VTTA_ICONIZER_MODULE_NAME, "forceUpdate", {
+	game.settings.register(CONSTANTS.MODULE_NAME, "forceUpdate", {
 		name: "Force Update Icons",
 		hint: "If enabled, icons will be updated even if an icon is already set for an Item.",
 		scope: "world",

@@ -12,41 +12,17 @@
 // Import JavaScript modules
 
 // Import TypeScript modules
-import { getGame, registerSettings } from "./module/settings";
-import { preloadTemplates } from "./module/preloadTemplates";
-import { VTTA_ICONIZER_MODULE_NAME } from "./module/settings";
-import { initHooks, readyHooks, setupHooks } from "./module/Hooks";
-
-export let debugEnabled = 0;
-// 0 = none, warnings = 1, debug = 2, all = 3
-export const debug = (...args) => {
-	if (debugEnabled > 1) console.log(`DEBUG:${VTTA_ICONIZER_MODULE_NAME} | `, ...args);
-};
-export const log = (...args) => console.log(`${VTTA_ICONIZER_MODULE_NAME} | `, ...args);
-export const warn = (...args) => {
-	if (debugEnabled > 0) console.warn(`${VTTA_ICONIZER_MODULE_NAME} | `, ...args);
-};
-export const error = (...args) => console.error(`${VTTA_ICONIZER_MODULE_NAME} | `, ...args);
-export const timelog = (...args) => warn(`${VTTA_ICONIZER_MODULE_NAME} | `, Date.now(), ...args);
-
-export const i18n = (key) => {
-	return getGame().i18n.localize(key);
-};
-export const i18nFormat = (key, data = {}) => {
-	return getGame().i18n.format(key, data);
-};
-
-export const setDebugLevel = (debugText: string) => {
-	debugEnabled = { none: 0, warn: 1, debug: 2, all: 3 }[debugText] || 0;
-	// 0 = none, warnings = 1, debug = 2, all = 3
-	if (debugEnabled >= 3) CONFIG.debug.hooks = true;
-};
+import { registerSettings } from "./scripts/settings";
+import { preloadTemplates } from "./scripts/preloadTemplates";
+import { initHooks, readyHooks, setupHooks } from "./scripts/module";
+import CONSTANTS from "./scripts/constants";
+import type API from "./scripts/api";
 
 /* ------------------------------------ */
 /* Initialize module					*/
 /* ------------------------------------ */
 Hooks.once("init", async () => {
-	console.log(`${VTTA_ICONIZER_MODULE_NAME} | Initializing ${VTTA_ICONIZER_MODULE_NAME}`);
+	// console.log(`${VTTA_ICONIZER_MODULE_NAME} | Initializing ${VTTA_ICONIZER_MODULE_NAME}`);
 
 	// Register custom module settings
 	registerSettings();
@@ -77,13 +53,60 @@ Hooks.once("setup", function () {
 /* ------------------------------------ */
 Hooks.once("ready", () => {
 	// Do anything once the module is ready
-	if (!getGame().modules.get("lib-wrapper")?.active && getGame().user?.isGM) {
-		ui.notifications?.error(
-			`The '${VTTA_ICONIZER_MODULE_NAME}' module requires to install and activate the 'libWrapper' module.`
-		);
-		return;
-	}
+	// if (!getGame().modules.get("lib-wrapper")?.active && getGame().user?.isGM) {
+	// 	ui.notifications?.error(
+	// 		`The '${VTTA_ICONIZER_MODULE_NAME}' module requires to install and activate the 'libWrapper' module.`
+	// 	);
+	// 	return;
+	// }
 	readyHooks();
 });
 
-// register hooks
+/* ------------------------------------ */
+/* Other Hooks							*/
+/* ------------------------------------ */
+
+Hooks.once("devModeReady", ({ registerPackageDebugFlag }) => {
+	registerPackageDebugFlag(CONSTANTS.MODULE_NAME);
+});
+
+export interface IconizerModuleData {
+	api: typeof API;
+	socket: any;
+}
+
+/**
+ * Initialization helper, to set API.
+ * @param api to set to game module.
+ */
+export function setApi(api: typeof API): void {
+	const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as IconizerModuleData;
+	data.api = api;
+}
+
+/**
+ * Returns the set API.
+ * @returns Api from games module.
+ */
+export function getApi(): typeof API {
+	const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as IconizerModuleData;
+	return data.api;
+}
+
+/**
+ * Initialization helper, to set Socket.
+ * @param socket to set to game module.
+ */
+export function setSocket(socket: any): void {
+	const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as IconizerModuleData;
+	data.socket = socket;
+}
+
+/*
+ * Returns the set socket.
+ * @returns Socket from games module.
+ */
+export function getSocket() {
+	const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as IconizerModuleData;
+	return data.socket;
+}

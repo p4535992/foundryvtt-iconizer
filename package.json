@@ -1,8 +1,8 @@
 {
-  "name": "ignore-vision",
-  "title": "Ignore Vision",
-  "description": "Allows the GM to continue seeing everything while selecting tokens with vision",
-  "version": "2.0.0",
+  "name": "iconizer",
+  "title": "Iconizer",
+  "description": "Sets item's icons automatically based on a pre-populated and/or user-defined dictionary",
+  "version": "2.2.0",
   "main": "main.js",
   "scripts": {
     "publish": "gulp publish --update",

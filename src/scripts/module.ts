@@ -1,6 +1,21 @@
-import { log, warn } from "../index";
+import { setApi } from "../index";
+import { log } from "./lib/lib";
 import { utils } from "./iconizer-utils";
-import { getGame, VTTA_ICONIZER_MODULE_NAME } from "./settings";
+import { registerSocket } from "./socket";
+import API from "./api";
+import CONSTANTS from "./constants";
+
+export const initHooks = () => {
+	// warn("Init Hooks processing");
+	// setup all the hooks
+	Hooks.once("socketlib.ready", registerSocket);
+	registerSocket();
+};
+
+export const setupHooks = () => {
+	// warn("Setup Hooks processing");
+	setApi(API);
+};
 
 export const readyHooks = async () => {
 	// This code runs once core initialization is ready and game data is available.
@@ -9,16 +24,16 @@ export const readyHooks = async () => {
 	// // check for failed registered settings
 	// let hasErrors = false;
 
-	// for (const s of getGame().settings.settings.values()) {
-	//   if (s.module !== VTTA_ICONIZER_MODULE_NAME) {
+	// for (const s of game.settings.settings.values()) {
+	//   if (s.module !== CONSTANTS.MODULE_NAME) {
 	//     continue;
 	//   }
 	//   try {
-	//     getGame().settings.get(s.module, s.key);
+	//     game.settings.get(s.module, s.key);
 	//   } catch (err) {
 	//     hasErrors = true;
 	//     ui.notifications?.info(`${s.module} | Erroneous module settings found, resetting to default.`);
-	//     getGame().settings.set(s.module, s.key, s.default);
+	//     game.settings.set(s.module, s.key, s.default);
 	//   }
 	// }
 	// if (hasErrors) {
@@ -26,13 +41,13 @@ export const readyHooks = async () => {
 	// }
 
 	// const iconData = new Map();
-	const iconDatabasePolicy = getGame().settings.get(VTTA_ICONIZER_MODULE_NAME, "icon-database-policy");
+	const iconDatabasePolicy = game.settings.get(CONSTANTS.MODULE_NAME, "icon-database-policy");
 
 	// load the base dictionary
 	if (iconDatabasePolicy === 0 || iconDatabasePolicy === 1) {
 		const basePath = ROUTE_PREFIX ? `/${ROUTE_PREFIX}` : "";
-		const path = `${basePath}/modules/${VTTA_ICONIZER_MODULE_NAME}/data/${getGame().settings.get(
-			VTTA_ICONIZER_MODULE_NAME,
+		const path = `${basePath}/modules/${CONSTANTS.MODULE_NAME}/data/${game.settings.get(
+			CONSTANTS.MODULE_NAME,
 			"base-dictionary"
 		)}`;
 
@@ -49,11 +64,11 @@ export const readyHooks = async () => {
 
 	// load the custom icon database (if there is any)
 	if (iconDatabasePolicy === 1 || iconDatabasePolicy === 2) {
-		const prefix = <string>getGame().settings.get(VTTA_ICONIZER_MODULE_NAME, "icon-directory");
+		const prefix = <string>game.settings.get(CONSTANTS.MODULE_NAME, "icon-directory");
 		log("Prefix is: " + prefix);
 		if (prefix.indexOf("http") === 0) {
 			log("starting with http");
-			const path = `${getGame().settings.get(VTTA_ICONIZER_MODULE_NAME, "icon-directory")}/icons.json`;
+			const path = `${game.settings.get(CONSTANTS.MODULE_NAME, "icon-directory")}/icons.json`;
 			try {
 				const response = await fetch(path, { method: "GET" });
 				const json = await response.json();
@@ -65,7 +80,7 @@ export const readyHooks = async () => {
 				log("Error loading custom dictionary from " + path);
 			}
 		} else {
-			const path = `/${getGame().settings.get(VTTA_ICONIZER_MODULE_NAME, "icon-directory")}/icons.json`;
+			const path = `/${game.settings.get(CONSTANTS.MODULE_NAME, "icon-directory")}/icons.json`;
 			const fileExists = await utils.serverFileExists(path);
 			if (fileExists) {
 				const response = await fetch(path, { method: "GET" });
@@ -98,11 +113,11 @@ export const readyHooks = async () => {
 		updateData = utils.replaceIcon(updateData);
 	});
 
-	Hooks.on("preCreateOwnedItem", (createData, options, userId) => {
-		//Hooks.on("preCreateOwnedItem", (parent, createData, options) => {
+	Hooks.on("preCreateItem", (createData, options, userId) => {
+		//Hooks.on("preCreateItem", (parent, createData, options) => {
 		options = utils.replaceIcon(options);
 		log("+++++++++++++++++++++++++++++++++++++++");
-		log("preCreateOwnedItem almost finished, let's check if that item came from a Foundry import:");
+		log("preCreateItem almost finished, let's check if that item came from a Foundry import:");
 		log(options);
 
 		// log("Options.flags?" + options.flags);
@@ -116,14 +131,14 @@ export const readyHooks = async () => {
 		// ) {
 		//   submitItem(options.name, options.type, options.flags.vtta.dndbeyond.type);
 		// }
-		log("preCreateOwnedItem finshed");
+		log("preCreateItem finshed");
 	});
 
-	Hooks.on("preUpdateOwnedItem", (entity, updateData, options, userId) => {
-		//Hooks.on("preUpdateOwnedItem", (parent, createData, options) => {
-		log("preUpdateOwnedItem");
+	Hooks.on("preUpdateItem", (entity, updateData, options, userId) => {
+		//Hooks.on("preUpdateItem", (parent, createData, options) => {
+		log("preUpdateItem");
 		if (!options.img) {
-			const item = entity.getEmbeddedEntity("OwnedItem", options._id);
+			const item = entity.getEmbeddedEntity("Item", options._id);
 			if (item) {
 				options.img = item.img;
 			}
@@ -131,14 +146,14 @@ export const readyHooks = async () => {
 		options = utils.replaceIcon(options);
 	});
 
-	Hooks.on("updateOwnedItem", function (actor, item, updateData, options, userId) {
+	Hooks.on("updateItem", function (actor, item, updateData, options, userId) {
 		if (updateData.name) {
 			//		log("Update Item triggered.");
 			utils.updateItem(actor, item);
 		}
 	});
 
-	Hooks.on("createOwnedItem", function (actor, item) {
+	Hooks.on("createItem", function (actor, item) {
 		//	log("Create Item triggered.");
 		utils.updateItem(actor, item);
 	});
@@ -168,19 +183,4 @@ export const readyHooks = async () => {
 			document.dispatchEvent(new CustomEvent("deliverIcon", { detail: response }));
 		}
 	});
-};
-
-export const setupHooks = () => {
-	//
-};
-
-export const initHooks = () => {
-	warn("Init Hooks processing");
-	// log('Init');
-	// const debug = false;
-	// if (!CONFIG.debug.vtta) {
-	//   CONFIG.debug.vtta = { iconizer: debug };
-	// } else {
-	//   CONFIG.debug.vtta.iconizer = debug;
-	// }
 };

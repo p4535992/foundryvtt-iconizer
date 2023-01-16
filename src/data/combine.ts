@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
-import { log } from "../index";
+import { log } from "../scripts/lib/lib";
 
 const dbItems = JSON.parse(fs.readFileSync(path.resolve(__dirname + "/temp", "worldofwarcraft-icons.json"), "utf-8"));
 
