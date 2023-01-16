@@ -176,7 +176,7 @@ export const utils = {
 		log("Update All Actors triggered.");
 		for (let actorCount = 0; actorCount < <number>game.actors?.contents.length; actorCount++) {
 			const actor = game.actors?.get(<string>(<Actor>game.actors?.contents[actorCount]).id);
-			this.udateActor(actor);
+			this.updateActor(actor);
 		}
 		log("Completed updating all actors.");
 	},
@@ -271,7 +271,7 @@ export const utils = {
 	executeUpdates(actor, updates) {
 		if (updates.length > 0) {
 			if (actor.can(game.user, "update")) {
-				actor.updateEmbeddedEntity("Item", updates);
+				actor.updateEmbeddedDocument("Item", updates);
 				log("Updated " + updates.length + " item icons for " + actor.name + ".");
 			} else {
 				log(

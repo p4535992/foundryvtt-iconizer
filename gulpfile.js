@@ -4,7 +4,7 @@
 /**
  * This is important for the bundle.js
  */
-const mainFilePath = `src/final-blow.ts`; // MOD 4535992
+const mainFilePath = `src/index.ts`; // MOD 4535992
 
 const gulp = require(`gulp`);
 const fs = require(`fs`);
@@ -254,6 +254,13 @@ function buildLess() {
  */
 function buildSASS() {
   return gulp.src(`src/**/*.scss`).pipe(sass().on(`error`, sass.logError)).pipe(gulp.dest(`dist`));
+}
+
+/**
+ * Build JSON
+ */
+function buildJSON() {
+    return gulp.src(`src/**/*.json`).pipe(gulp.dest(`dist`));
 }
 
 const bundleModule = async () => {
@@ -655,7 +662,7 @@ const test = () => {
 
 
 // const execBuild = gulp.parallel(buildTS, buildLess, copyFiles); // MOD 4535992
-const execBuild = gulp.parallel(buildTS, buildJS, buildMJS, buildCSS, buildLess, buildSASS, copyFiles);
+const execBuild = gulp.parallel(buildTS, buildJS, buildMJS, buildCSS, buildLess, buildSASS, buildJSON, copyFiles);
 
 exports.build = gulp.series(clean, execBuild);
 exports.bundle = gulp.series(clean, execBuild, bundleModule, cleanDist);

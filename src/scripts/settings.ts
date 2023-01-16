@@ -1,6 +1,14 @@
 import CONSTANTS from "./constants";
 
 export const registerSettings = function () {
+	game.settings.registerMenu(CONSTANTS.MODULE_NAME, "resetAllSettings", {
+		name: `${CONSTANTS.MODULE_NAME}.setting.reset.name`,
+		hint: `${CONSTANTS.MODULE_NAME}.setting.reset.hint`,
+		icon: "fas fa-coins",
+		type: ResetSettingsDialog,
+		restricted: true,
+	});
+
 	game.settings.register(CONSTANTS.MODULE_NAME, "replacement-policy", {
 		name: `${CONSTANTS.MODULE_NAME}.replacement-policy.name`,
 		hint: `${CONSTANTS.MODULE_NAME}.replacement-policy.hint`,
@@ -50,7 +58,7 @@ export const registerSettings = function () {
 		scope: "world",
 		config: true,
 		type: String,
-		default: "iconizer",
+		default: "iconizer/data/json",
 	});
 
 	// Submitting icons is a todo
@@ -80,4 +88,53 @@ export const registerSettings = function () {
 		default: false,
 		type: Boolean,
 	});
+
+	game.settings.register(CONSTANTS.MODULE_NAME, "debug", {
+		name: `${CONSTANTS.MODULE_NAME}.setting.debug.name`,
+		hint: `${CONSTANTS.MODULE_NAME}.setting.debug.hint`,
+		scope: "client",
+		config: true,
+		default: false,
+		type: Boolean,
+	});
 };
+
+class ResetSettingsDialog extends FormApplication<FormApplicationOptions, object, any> {
+	constructor(...args) {
+		//@ts-ignore
+		super(...args);
+		//@ts-ignore
+		return new Dialog({
+			title: game.i18n.localize(`${CONSTANTS.MODULE_NAME}.dialogs.resetsettings.title`),
+			content:
+				'<p style="margin-bottom:1rem;">' +
+				game.i18n.localize(`${CONSTANTS.MODULE_NAME}.dialogs.resetsettings.content`) +
+				"</p>",
+			buttons: {
+				confirm: {
+					icon: '<i class="fas fa-check"></i>',
+					label: game.i18n.localize(`${CONSTANTS.MODULE_NAME}.dialogs.resetsettings.confirm`),
+					callback: async () => {
+						const worldSettings = game.settings.storage
+							?.get("world")
+							?.filter((setting) => setting.key.startsWith(`${CONSTANTS.MODULE_NAME}.`));
+						for (let setting of worldSettings) {
+							console.log(`Reset setting '${setting.key}'`);
+							await setting.delete();
+						}
+						//window.location.reload();
+					},
+				},
+				cancel: {
+					icon: '<i class="fas fa-times"></i>',
+					label: game.i18n.localize(`${CONSTANTS.MODULE_NAME}.dialogs.resetsettings.cancel`),
+				},
+			},
+			default: "cancel",
+		});
+	}
+
+	async _updateObject(event: Event, formData?: object): Promise<any> {
+		// do nothing
+	}
+}

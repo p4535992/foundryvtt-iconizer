@@ -14,5 +14,17 @@
 	"iconiser.base-dictionary.name": "Base dictionary",
 	"iconiser.base-dictionary.hint": "Select the base dictionary to use, defaults to a dictionary referencing to the basic Foundry icons. Please note: This is only the dictionary, you will need to add the required icons manually. Note: Changing this setting requires a reload.",
 	"iconiser.share-missing-icons.name": "Share missing icons",
-	"iconiser.share-missing-icons.hint": "You can choose to send the item details (name, type and subtype) to the VTTA server. This enables me to find suitable icons for new items more easy."
+	"iconiser.share-missing-icons.hint": "You can choose to send the item details (name, type and subtype) to the VTTA server. This enables me to find suitable icons for new items more easy.",
+
+	"iconiser.setting.reset.name": "Reset settings to default",
+	"iconiser.setting.reset.label": "Reset Settings To Default",
+	"iconiser.setting.reset.hint": "This will reset all of the settings of back to the active game system's default.",
+	"iconiser.setting.debug.name": "Enable debugging",
+	"iconiser.setting.debug.label": "Prints debug messages to the console",
+	"iconiser.setting.debug.hint": " ",
+
+	"iconiser.dialogs.resetsettings.title": "Reset Module Settings",
+	"iconiser.dialogs.resetsettings.content": "Are you sure you want to reset all of the module settings to the current system's defaults? <strong>THIS CANNOT BE UNDONE!</strong>",
+	"iconiser.dialogs.resetsettings.confirm": "Reset Module Settings",
+	"iconiser.dialogs.resetsettings.cancel": "Cancel"
 }

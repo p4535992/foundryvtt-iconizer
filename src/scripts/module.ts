@@ -92,33 +92,47 @@ export const readyHooks = async () => {
 		}
 	}
 
-	// Hook on the item create events to replace the icon
-	Hooks.on("preCreateItem", (createData, options, userId) => {
-		log("preCreateItem");
-		let opts = {
-			name: createData.name,
-			img: createData.img,
-		};
-		opts = utils.replaceIcon(opts);
+	// Hooks.on("preUpdateItem", (item, updateData, options, userId) => {
+	// 	//Hooks.on("preUpdateItem", (parent, createData, options) => {
+	// 	log("preUpdateItem");
+	// 	if (!updateData.img) {
+	// 		const itemTmp = item.getEmbeddedDocument("Item", updateData._id);
+	// 		if (itemTmp) {
+	// 			updateData.img = itemTmp.img;
+	// 		}
+	// 	}
+	// 	updateData = utils.replaceIcon(updateData);
+	// });
 
-		createData.data._source.img = opts.img;
-	});
-
-	Hooks.on("preUpdateItem", (entity, updateData, options, userId) => {
-		//Hooks.on("preUpdateItem", (createData, options) => {
+	Hooks.on("preUpdateItem", (item, updateData, options, userId) => {
 		log("preUpdateItem");
 		if (!updateData.img) {
-			updateData.img = entity.img;
+			updateData.img = item.img;
 		}
 		updateData = utils.replaceIcon(updateData);
 	});
 
-	Hooks.on("preCreateItem", (createData, options, userId) => {
-		//Hooks.on("preCreateItem", (parent, createData, options) => {
-		options = utils.replaceIcon(options);
+	// Hook on the item create events to replace the icon
+	// Hooks.on("preCreateItem", (item, createData, options, userId) => {
+	// 	log("preCreateItem");
+	// 	let opts = {
+	// 		name: createData.name,
+	// 		img: createData.img,
+	// 	};
+	// 	opts = utils.replaceIcon(opts);
+
+	// 	createData.data._source.img = opts.img;
+	// });
+
+	Hooks.on("preCreateItem", (item, createData, options, userId) => {
+		log("preCreateItem");
+		if (!createData.img) {
+			createData.img = item.img;
+		}
+		createData = utils.replaceIcon(createData);
 		log("+++++++++++++++++++++++++++++++++++++++");
 		log("preCreateItem almost finished, let's check if that item came from a Foundry import:");
-		log(options);
+		log(createData);
 
 		// log("Options.flags?" + options.flags);
 		// if (
@@ -131,19 +145,7 @@ export const readyHooks = async () => {
 		// ) {
 		//   submitItem(options.name, options.type, options.flags.vtta.dndbeyond.type);
 		// }
-		log("preCreateItem finshed");
-	});
-
-	Hooks.on("preUpdateItem", (entity, updateData, options, userId) => {
-		//Hooks.on("preUpdateItem", (parent, createData, options) => {
-		log("preUpdateItem");
-		if (!options.img) {
-			const item = entity.getEmbeddedEntity("Item", options._id);
-			if (item) {
-				options.img = item.img;
-			}
-		}
-		options = utils.replaceIcon(options);
+		log("preCreateItem finished");
 	});
 
 	Hooks.on("updateItem", function (actor, item, updateData, options, userId) {
