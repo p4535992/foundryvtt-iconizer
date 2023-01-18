@@ -1,14 +1,17 @@
 [
 	{
 		"name": "This is my item name",
-		"icon": "this/is/the/image/I/will/use.png"
+		"path": "this/is/the/image/I/will/use.png",
+		"tags": []
 	},
 	{
 		"name": "You can reference icons beneath the Icon directory (see Iconizer's module settings)",
-		"icon": "this/is/under/the/iconizer/directory.png"
+		"path": "this/is/under/the/iconizer/directory.png",
+		"tags": []
 	},
 	{
 		"name": "Or you can reference absolute paths",
-		"icon": "/this/path/does/not/include/icon/directory.png"
+		"path": "/this/path/does/not/include/icon/directory.png",
+		"tags": []
 	}
 ]
